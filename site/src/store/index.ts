@@ -3,12 +3,14 @@ import Vuex from 'vuex';
 import { createDirectStore } from 'direct-vuex';
 
 import users from './users/index';
+import challenges from './challenges/index';
 
 Vue.use(Vuex);
 
 const { store } = createDirectStore({
   modules: {
     users,
+    challenges,
   },
 } as const);
 
