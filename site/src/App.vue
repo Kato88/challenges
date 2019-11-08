@@ -12,6 +12,9 @@
       <v-btn text>
         <span class="mr-2">Leaderboards</span>
       </v-btn>
+      <v-btn text to="/login">
+        <span class="mr-2">Login</span>
+      </v-btn>
     </v-app-bar>
     <v-content>
       <router-view></router-view>
@@ -33,3 +36,9 @@ export default Vue.extend({
   })
 });
 </script>
+
+<style lang="scss">
+h1 {
+  font-weight: 300;
+}
+</style>

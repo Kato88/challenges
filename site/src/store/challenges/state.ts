@@ -1,13 +1,13 @@
 export default {
-    challenges: createFakeChallenges(),
-} as ChallengesStage;
+    challenges: [],
+} as ChallengesState;
 
 
-interface ChallengesStage {
+export interface ChallengesState {
     challenges: Challenge[];
 }
 
-interface Challenge {
+export interface Challenge {
     id: string;
     title: string;
     teaser: string;
@@ -23,13 +23,13 @@ export enum ChallengeDifficulties {
 
 function createFakeChallenges(): Challenge[] {
     const challenges = [];
-    
+
     for (let i = 0; i < 20; i++) {
         challenges.push({
             id: 'id' + i,
             title: 'title' + i,
-            teaser: 'teader' + i,
-            description: 'desc' + i,
+            teaser: 'Lorem ipsum dolor sit amet, consetetur sadipscing elitr, sed diam nonumy eirmod tempor invidunt ut labore et dolore magna aliquyam erat, sed diam voluptua. At vero eos et accusam et justo duo dolores et ea rebum.' + i,
+            description: '**text**',
             difficulty: i % 3,
         });
     }
