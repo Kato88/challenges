@@ -4,6 +4,7 @@ import Home from '../views/Home.vue';
 import Challenges from '../views/Challenges.vue';
 import ChallengeView from '../views/Challenge.vue';
 import Login from '../views/Login.vue';
+import EditChallenge from '../views/admin/EditChallenge.vue';
 
 Vue.use(VueRouter);
 
@@ -27,7 +28,12 @@ const routes = [
     path: '/login',
     name: 'login',
     component: Login,
-  }
+  },
+  {
+    path: '/challenge/:id/edit',
+    name: 'editChallenge',
+    component: EditChallenge,
+  },
 ];
 
 const router = new VueRouter({

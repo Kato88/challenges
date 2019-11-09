@@ -1,5 +1,5 @@
 <template>
-  <div id="container" class="home">
+  <div class="home">
   </div>
 </template>
 
@@ -12,11 +12,8 @@ const authProvider = firebase.auth.GoogleAuthProvider.PROVIDER_ID;
 
 @Component({
   components: {},
-  
+
 })
 export default class Home extends Vue {
-  get nickname() {
-    return this.$store.direct.state.users.nickname;
-  }
 }
 </script>

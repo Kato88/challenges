@@ -4,7 +4,7 @@
       <v-card-title>
         <h1>Login</h1>
       </v-card-title>
-      <v-card-text id="container"></v-card-text>
+      <v-card-text id="firebaseui-auth-container"></v-card-text>
     </v-card>
   </v-container>
 </template>
@@ -14,21 +14,24 @@ import { Vue, Component } from 'vue-property-decorator';
 import * as firebase from 'firebase';
 import * as firebaseui from 'firebaseui';
 
-
-
 @Component({
   components: {},
-  created() {
-    const authProvider = firebase.auth.GoogleAuthProvider.PROVIDER_ID;
-    this.$store.state.ui.reset();
-    this.$store.state.ui.start('#container', {
-      signInOptions: [authProvider],
-    });
+  mounted() {
+    const uiConfig = {
+      signInSuccessUrl: '/#/home',
+      signInOptions: [
+        firebase.auth.GoogleAuthProvider.PROVIDER_ID,
+        firebase.auth.EmailAuthProvider.PROVIDER_ID,
+      ],
+    };
+
+    // @ts-ignore
+    let ui = firebaseui.auth.AuthUI.getInstance();
+    if (!ui) {
+      ui = new firebaseui.auth.AuthUI(firebase.auth());
+    }
+    ui.start('#firebaseui-auth-container', uiConfig);
   },
 })
-export default class Login extends Vue {
-  get nickname() {
-    return this.$store.direct.state.users.nickname;
-  }
-}
+export default class Login extends Vue {}
 </script>

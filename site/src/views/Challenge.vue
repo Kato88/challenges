@@ -1,36 +1,43 @@
 <template>
   <v-container>
-    <v-card>
-      <v-row>
-        <v-col
-          cols="12"
-          md="12"
-        >
+    <v-row dense>
+      <v-col cols="12">
+        <v-card>
           <v-card-text>
-            <h1>{{challenge.title}}</h1>
+            <v-row>
+              <v-col cols="11">
+                <h1>{{challenge.title}}</h1>
+                <p></p>
+                <p>{{challenge.teaser}}</p>
+              </v-col>
+              <v-col cols="1">
+                <v-btn v-if="isAdmin" text icon @click="edit">
+                  <v-icon>mdi-pencil</v-icon>
+                </v-btn>
+              </v-col>
+            </v-row>
           </v-card-text>
-          <v-card-text>
-            <p>{{challenge.teaser}}</p>
-          </v-card-text>
-        </v-col>
-      </v-row>
-      <v-row>
-        <v-col
-          cols="12"
-          md="12"
-        >
-          <v-card-text v-html="description">
-          </v-card-text>
-        </v-col>
-      </v-row>
-    </v-card>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-text v-html="challenge.description"></v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-btn color="primary">Get your Output</v-btn>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 
 <script lang="ts">
-import { Vue, Component } from 'vue-property-decorator';
-import { Challenge } from '@/store/challenges/state';
-import * as marked from 'marked';
+import { Vue, Component } from "vue-property-decorator";
+import { Challenge } from "@/store/challenges/types";
 
 @Component({
   components: {}
@@ -40,14 +47,27 @@ export default class ChallengeView extends Vue {
     return this.$route.params.id;
   }
 
-  get description() {
-    return marked(this.challenge.description);
+  get isAdmin(): boolean {
+    return this.$store.direct.getters.user.isAdmin;
   }
 
   get challenge(): Challenge {
-    return this.$store.direct.state.challenges.challenges.find(
+    const challenge = this.$store.direct.state.challenges.challenges.find(
       (c: Challenge) => c.id === this.challengeId
     ) as Challenge;
+
+    if (!challenge) {
+      this.$store.direct.dispatch.challenges.load();
+    }
+
+    return challenge || ({} as Challenge);
+  }
+
+  public edit() {
+    this.$router.push({
+      name: "editChallenge",
+      params: { id: this.challengeId }
+    });
   }
 }
 </script>

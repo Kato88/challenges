@@ -1,10 +1,6 @@
-export default {
-    challenges: [],
-} as ChallengesState;
-
-
 export interface ChallengesState {
     challenges: Challenge[];
+    saving: boolean;
 }
 
 export interface Challenge {
@@ -12,7 +8,7 @@ export interface Challenge {
     title: string;
     teaser: string;
     description: string;
-    difficulty: ChallengeDifficulties,
+    difficulty: ChallengeDifficulties;
 }
 
 export enum ChallengeDifficulties {

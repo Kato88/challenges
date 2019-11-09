@@ -6,14 +6,18 @@
       <v-btn to="/" text>
         <span class="mr-2">Home</span>
       </v-btn>
+      <admin-menu-button v-if="isAdmin"></admin-menu-button>
       <v-btn to="/challenges" text>
         <span class="mr-2">Challenges</span>
       </v-btn>
       <v-btn text>
         <span class="mr-2">Leaderboards</span>
       </v-btn>
-      <v-btn text to="/login">
+      <v-btn text to="/login" v-if="!isAuthenticated">
         <span class="mr-2">Login</span>
+      </v-btn>
+      <v-btn text @click="logout" v-if="isAuthenticated">
+        <span class="mr-2">Logout</span>
       </v-btn>
     </v-app-bar>
     <v-content>
@@ -23,18 +27,30 @@
 </template>
 
 <script lang="ts">
-import Vue from "vue";
-import HelloWorld from "./components/HelloWorld.vue";
+import { Vue, Component } from 'vue-property-decorator';
+import * as firebase from 'firebase';
 
-export default Vue.extend({
-  name: "App",
+import AdminMenuButton from './components/AdminMenuButton.vue';
 
-  components: {},
+@Component({
+  components: {
+    AdminMenuButton,
+  },
+})
+export default class App extends Vue {
+  public logout() {
+    firebase.auth().signOut();
+    this.$store.direct.commit.user.SET_USER(null);
+  }
 
-  data: () => ({
-    //
-  })
-});
+  get isAuthenticated(): boolean {
+    return this.$store.direct.getters.user.isAuthenticated;
+  }
+
+  get isAdmin(): boolean {
+    return this.$store.direct.getters.user.isAdmin;
+  }
+}
 </script>
 
 <style lang="scss">
