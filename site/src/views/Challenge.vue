@@ -29,7 +29,7 @@
     </v-row>
     <v-row>
       <v-col cols="12">
-        <v-btn color="primary">Get your Output</v-btn>
+        <v-btn color="primary" @click="start">Start this challenge!</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -68,6 +68,10 @@ export default class ChallengeView extends Vue {
       name: "editChallenge",
       params: { id: this.challengeId }
     });
+  }
+
+  public start() {
+    
   }
 }
 </script>

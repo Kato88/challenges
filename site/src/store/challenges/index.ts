@@ -1,6 +1,7 @@
 import { ChallengesState, Challenge } from './types';
 import { moduleActionContext } from '..';
 import { ActionContext, MutationPayload } from 'vuex';
+import axios from 'axios';
 
 const mod = {
     namespaced: true,
@@ -36,6 +37,11 @@ const mod = {
             }).finally(() => {
                 commit.SET_SAVING(false);
             });
+        },
+        startChallenge(context: any, challenge: Challenge) {
+            const { commit, state, rootState } = moduleActionContext(context, mod);
+            commit.SET_SAVING(true);
+            axios.post('')
         }
     },
     mutations: {
