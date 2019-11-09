@@ -1,6 +1,7 @@
 import { ChallengesState, Challenge } from './types';
 import { moduleActionContext } from '..';
 import { ActionContext, MutationPayload } from 'vuex';
+import { CreateParticipationRequestBody } from '../../../../shared/types';
 import axios from 'axios';
 
 const mod = {
@@ -38,10 +39,16 @@ const mod = {
                 commit.SET_SAVING(false);
             });
         },
-        startChallenge(context: any, challenge: Challenge) {
+        async startChallenge(context: any, challengeId: string) {
             const { commit, state, rootState } = moduleActionContext(context, mod);
             commit.SET_SAVING(true);
-            axios.post('')
+            const result = await axios.post('https://europe-west2-challenge-83ceb.cloudfunctions.net/createParticipation', {
+                challengeId: challengeId,
+                userId: rootState.user.profile.uid,
+            } as CreateParticipationRequestBody);
+
+            console.log('finished');
+            commit.SET_SAVING(false);
         }
     },
     mutations: {

@@ -1,0 +1,14 @@
+{
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "Debug Jest Tests",
+            "type": "node",
+            "request": "launch",
+            "port": 9230,
+            "runtimeArgs": ["--inspect-brk", "${workspaceRoot}/challenges/functions/node_modules/.bin/jest", "--runInBand", "--coverage", "false"],
+            "console": "integratedTerminal",
+            "internalConsoleOptions": "neverOpen"
+        }
+    ]
+}

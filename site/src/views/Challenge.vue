@@ -29,7 +29,7 @@
     </v-row>
     <v-row>
       <v-col cols="12">
-        <v-btn color="primary" @click="start">Start this challenge!</v-btn>
+        <v-btn color="primary" :loading="saving" @click="start">Start this challenge!</v-btn>
       </v-col>
     </v-row>
   </v-container>
@@ -63,6 +63,10 @@ export default class ChallengeView extends Vue {
     return challenge || ({} as Challenge);
   }
 
+  get saving(): boolean {
+    return this.$store.direct.state.challenges.saving;
+  }
+
   public edit() {
     this.$router.push({
       name: "editChallenge",
@@ -71,7 +75,7 @@ export default class ChallengeView extends Vue {
   }
 
   public start() {
-    
+    this.$store.direct.dispatch.challenges.startChallenge(this.challengeId);
   }
 }
 </script>

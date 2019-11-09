@@ -1,0 +1,3 @@
+interface IInputGenerator {
+    generate(): string;
+}
