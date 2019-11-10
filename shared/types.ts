@@ -5,6 +5,12 @@ export interface CreateParticipationRequestBody {
     challengeId: string;
 }
 
+export interface ValidateResultRequestBody {
+    userId: string;
+    challengeId: string;
+    result: string;
+}
+
 export interface Participation {
     id: string;
     userId: string;
@@ -12,4 +18,16 @@ export interface Participation {
     inputUrl: string;
     start: firebase.firestore.Timestamp;
     end?: firebase.firestore.Timestamp;
+    result?: string;
+}
+
+export interface ValidationResultResponse {
+    isValid: boolean;
+    error?: string;
+}
+
+export interface CreateParticipationResponse {
+    success: boolean;
+    participationId: string;
+    inputUrl: string;
 }

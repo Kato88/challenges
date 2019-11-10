@@ -1,3 +1,3 @@
 export interface IResultValidator {
-    validate(input: string, result: string): boolean;
+    validate(input: string, result: string): Promise<boolean>;
 }

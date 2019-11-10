@@ -33,8 +33,8 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { ChallengeDifficulties, Challenge } from "../store/challenges/types";
+import { Vue, Component } from 'vue-property-decorator';
+import { ChallengeDifficulties, Challenge } from '../store/challenges/types';
 
 @Component({
   components: {}
@@ -42,24 +42,24 @@ import { ChallengeDifficulties, Challenge } from "../store/challenges/types";
 export default class Challenges extends Vue {
   public headers = [
     {
-      text: "Difficulty",
-      align: "left",
+      text: 'Difficulty',
+      align: 'left',
       sortable: true,
-      value: "difficulty",
-      width: "100px"
+      value: 'difficulty',
+      width: '100px'
     },
     {
-      text: "Title",
-      align: "left",
+      text: 'Title',
+      align: 'left',
       sortable: true,
-      value: "title",
-      width: "200px"
+      value: 'title',
+      width: '200px'
     },
     {
-      text: "Teaser",
-      align: "left",
+      text: 'Teaser',
+      align: 'left',
       sortable: false,
-      value: "teaser"
+      value: 'teaser'
     }
   ];
 
@@ -80,29 +80,29 @@ export default class Challenges extends Vue {
   public getDifficultyColor(difficulty: ChallengeDifficulties): string {
     switch (difficulty) {
       case ChallengeDifficulties.easy:
-        return "green";
+        return 'green';
       case ChallengeDifficulties.medium:
-        return "orange";
+        return 'orange';
       case ChallengeDifficulties.hard:
-        return "red";
+        return 'red';
     }
   }
 
   public getDifficultyName(difficulty: ChallengeDifficulties) {
     switch (difficulty) {
       case ChallengeDifficulties.easy:
-        return "easy";
+        return 'easy';
       case ChallengeDifficulties.medium:
-        return "medium";
+        return 'medium';
       case ChallengeDifficulties.hard:
-        return "hard";
+        return 'hard';
     }
   }
 
   public goTo(challenge: Challenge) {
     this.$router.push({
-      name: "challenge",
-      params: { id: challenge.id }
+      name: 'challenge',
+      params: { id: challenge.id },
     });
   }
 }

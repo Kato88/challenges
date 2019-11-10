@@ -1,7 +1,7 @@
 import { IResultValidator } from '../IResultValidator';
 
 export default class Validator implements IResultValidator {
-    validate(input: string, result: string): boolean {
+    async validate(input: string, result: string): Promise<boolean> {
         const lines = input.split(/\n/);
         let counter = 0;
         const resultNumber = Number(result);
@@ -23,7 +23,7 @@ export default class Validator implements IResultValidator {
         while (words.length > 0) {
             const current = words.pop() as string;
 
-            if (words.indexOf(current) != -1) {
+            if (words.indexOf(current) !== -1) {
                 return true;
             }
         }

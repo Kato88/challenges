@@ -1,7 +1,9 @@
+import { Participation } from '../../../../shared/types';
+
 export interface UserState {
-    nickname: string;
     profile: any;
     isAdmin: boolean;
+    participations: Participation[];
 }
 
 export interface UserRights {
