@@ -1,54 +1,46 @@
 <template>
   <v-container>
-    <v-row dense>
-      <v-col cols="12">
+    <v-row>
+      <v-col cols="9">
         <v-card>
           <v-card-text>
-            <v-row>
-              <v-col cols="11">
-                <h1>{{challenge.title}}</h1>
-                <p></p>
-                <p>{{challenge.teaser}}</p>
-              </v-col>
-              <v-col cols="1">
-                <v-btn v-if="isAdmin" text icon @click="edit">
-                  <v-icon>mdi-pencil</v-icon>
-                </v-btn>
-              </v-col>
-            </v-row>
+            <h1>{{challenge.title}}</h1>
+          </v-card-text>
+          <v-card-text>
+            <p>{{challenge.teaser}}</p>
+          </v-card-text>
+          <v-card-text v-html="challenge.description"></v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="3">
+        <v-card v-if="isAdmin" class="admin-panel">
+          <v-card-title>
+            Admin
+          </v-card-title>
+          <v-card-text>
+            <v-btn @click="edit" color="primary" block>Edit</v-btn>
+          </v-card-text>
+        </v-card>
+        <v-card>
+          <v-card-title>Actions</v-card-title>
+          <v-card-text v-if="!participation">
+                <v-btn color="primary" :loading="saving" block @click="start">Start challenge!</v-btn>
+          </v-card-text>
+          <v-card-text v-if="participation && !participation.result">
+                <v-btn color="primary" @click="downloadInput" block>Download your Input</v-btn>
+          </v-card-text>
+          <v-card-text>
+                <v-textarea v-model="resultInput" label="Provide your result value"></v-textarea>
+                <v-btn
+                  color="primary"
+                  @click="validateInput"
+                  block
+                  :disabled="resultInput.length > 0"
+                >Validate Result</v-btn>
           </v-card-text>
         </v-card>
       </v-col>
     </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card>
-          <v-card-text v-html="challenge.description"></v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row v-if="!participation">
-      <v-col cols="12">
-        <v-btn color="primary" :loading="saving" @click="start">Start this challenge!</v-btn>
-      </v-col>
-    </v-row>
-    <v-card>
-      <v-card-text>
-        <v-row v-if="participation && !participation.result">
-          <v-col cols="3">
-            <v-btn color="primary" @click="downloadInput">Download your Input</v-btn>
-          </v-col>
-          <v-col cols="9">
-            <v-textarea v-model="resultInput" label="Provide your result value"></v-textarea>
-            <v-btn
-              color="primary"
-              @click="validateInput"
-              :disabled="resultInput.length > 0"
-            >Validate Result</v-btn>
-          </v-col>
-        </v-row>
-      </v-card-text>
-    </v-card>
   </v-container>
 </template>
 
@@ -115,3 +107,9 @@ export default class ChallengeView extends Vue {
   public validateInput() {}
 }
 </script>
+
+<style lang="scss" scoped>
+.admin-panel {
+  margin-bottom: 15px;
+}
+</style>

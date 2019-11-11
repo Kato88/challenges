@@ -12,14 +12,15 @@ const mod = {
     } as UserState,
     actions: {
         loadProfile(context: any, user: firebase.User) {
-            const {commit, rootState} = moduleActionContext(context, mod);
+            const { commit, rootState } = moduleActionContext(context, mod);
             rootState.db.collection('users').doc(user.uid).get().then((doc) => {
                 commit.SET_RIGHTS(doc.data());
             });
         },
-        async loadParticipations(context: any) {
-            const {commit, rootState} = moduleActionContext(context, mod);
-            const snapshot = await rootState.db.collection('participations').get();
+        async loadParticipations(context: any, user: firebase.User) {
+            const { commit, rootState } = moduleActionContext(context, mod);
+            const snapshot = await rootState.db.collection('participations')
+                .where('userId', '==', user.uid).get();
             const participations: Participation[] = [];
 
             snapshot.forEach((doc) => {
@@ -31,9 +32,9 @@ const mod = {
             commit.SET_PARTICIPATIONS(participations);
         },
         async loadParticipation(context: any, participationId: string) {
-            const {commit, rootState} = moduleActionContext(context, mod);
+            const { commit, rootState } = moduleActionContext(context, mod);
             const snapshot = await rootState.db.collection('participations').doc(participationId).get();
-            
+
             const participation = snapshot.data() as Participation;
             participation.id = snapshot.id;
 

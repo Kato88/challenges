@@ -6,7 +6,6 @@
       <v-btn to="/" text>
         <span class="mr-2">Home</span>
       </v-btn>
-      <admin-menu-button v-if="isAdmin"></admin-menu-button>
       <v-btn to="/challenges" text>
         <span class="mr-2">Challenges</span>
       </v-btn>

@@ -25,7 +25,7 @@ new Vue({
         // this.$router.push('/home');
         this.$store.direct.commit.user.SET_USER(user);
         this.$store.direct.dispatch.user.loadProfile(user);
-        this.$store.direct.dispatch.user.loadParticipations();
+        this.$store.direct.dispatch.user.loadParticipations(user);
       } else {
         this.$router.push('/login');
       }
