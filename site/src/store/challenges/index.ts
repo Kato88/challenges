@@ -9,6 +9,7 @@ const mod = {
     state: {
         challenges: [],
         saving: false,
+        submittingSolution: false,
     } as ChallengesState,
     actions: {
         async load(context: ActionContext<any, any>) {
@@ -56,6 +57,15 @@ const mod = {
 
             await rootDispatch.user.loadParticipation(resultData.participationId);
             commit.SET_SAVING(false);
+        },
+        async submitSolution(context: any, payload: {solutionUrl: string, participationId: string} ) {
+            const { commit, rootState, rootCommit } = moduleActionContext(context, mod);
+            commit.SET_SUBMITTING_SOLUTION(true);
+            await rootState.db.collection('participations').doc(payload.participationId).set({
+                solutionUrl: payload.solutionUrl
+            });
+
+            rootCommit.user.SET_SOLUTION_URL(payload);
         }
     },
     mutations: {
@@ -71,6 +81,9 @@ const mod = {
         SET_SAVING(state: ChallengesState, saving: boolean) {
             state.saving = saving;
         },
+        SET_SUBMITTING_SOLUTION(state: ChallengesState, submitting: boolean) {
+            state.submittingSolution = submitting;
+        }
     },
     getters: {},
 } as const;

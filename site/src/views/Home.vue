@@ -5,7 +5,10 @@
         <v-card>
           <v-card-title>Welcome</v-card-title>
           <v-card-text>
-            What is this all about
+            This websites provides you coding challenges. Choose a challenge you want to take, 
+            generate your very own input to work with and validate your result. 
+            Get instant feedback and optionally upload your solution to share with others.
+            Earn points by completing challenges based on your time needed and the difficulty level.
           </v-card-text>
         </v-card>
       </v-col>

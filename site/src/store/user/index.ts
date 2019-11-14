@@ -53,7 +53,13 @@ const mod = {
         },
         ADD_PARTICIPATIONS(state: UserState, participation: Participation) {
             state.participations.push(participation);
-        }
+        },
+        SET_SOLUTION_URL(state: UserState, payload: { solutionUrl: string, participationId: string }) {
+            const participationIndex = state.participations.findIndex((p => p.id === payload.participationId));
+            if (participationIndex > -1) {
+                state.participations[participationIndex].solutionUrl = payload.solutionUrl;
+            }
+        },
     },
     getters: {
         isAuthenticated(state: UserState): boolean {

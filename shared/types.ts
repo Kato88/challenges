@@ -19,6 +19,8 @@ export interface Participation {
     start: firebase.firestore.Timestamp;
     end?: firebase.firestore.Timestamp;
     result?: string;
+    points?: number;
+    solutionUrl?: string;
 }
 
 export interface ValidationResultResponse {
