@@ -31,27 +31,36 @@
               color="primary"
               @click="validateInput"
               block
+              :loading="validating"
               :disabled="resultInput.length === 0"
             >Validate Result</v-btn>
+            <span class="validationFailed" v-if="validationFailed">Your result is wrong :(</span>
           </v-card-text>
         </v-card>
-        <v-card v-if="participation">
+        <v-card v-if="participation && participation.end">
           <v-card-title>You've done it!</v-card-title>
           <v-card-text v-if="!participation.solutionUrl">
             Congratulations you have mastered this challenge and earned
-            <b>{{participation.points}}</b>!
+            <b>{{participation.points}}</b> points!
             You can earn
             <b>one</b> additional points by sharing your solution! You can do this by uploading your code
             to
-            <a href="https://pastebin.com/">pastebin.com</a> (or something similar) and share your URL.
+            <a
+              href="https://pastebin.com/"
+            >pastebin.com</a> (or something similar) and share your URL.
           </v-card-text>
           <v-card-text v-if="!participation.solutionUrl">
             <v-text-field label="Url to your solution" v-model="solutionUrl"></v-text-field>
-            <v-btn @click="submitSolution" :disabled="solutionUrl.length === 0">Submit solution</v-btn>
+            <v-btn
+              @click="submitSolution"
+              color="primary"
+              :loading="submitting"
+              :disabled="solutionUrl.length === 0"
+            >Submit solution</v-btn>
           </v-card-text>
           <v-card-text v-if="participation.solutionUrl">
             Congratulations you have mastered this challenge and earned
-            <b>{{participation.points}}</b> and one additional point by sharing your solution!
+            <b>{{participation.points}}</b>. Thank you very much for sharing your solution!
           </v-card-text>
         </v-card>
       </v-col>
@@ -106,6 +115,22 @@ export default class ChallengeView extends Vue {
     return this.$store.direct.state.challenges.saving;
   }
 
+  get validating(): boolean {
+    return this.$store.direct.state.challenges.validating;
+  }
+
+  get submitting(): boolean {
+    return this.$store.direct.state.challenges.submittingSolution;
+  }
+
+  get validationFailed(): boolean {
+    return this.$store.direct.state.challenges.validationFailed;
+  }
+
+  created() {
+    this.$store.direct.commit.challenges.SET_VALIDATION_FAILED(false);
+  }
+
   public edit() {
     this.$router.push({
       name: "editChallenge",
@@ -121,7 +146,14 @@ export default class ChallengeView extends Vue {
     window.open(this.participation.inputUrl, "_blank");
   }
 
-  public validateInput() {}
+  public validateInput() {
+    if (this.resultInput) {
+      this.$store.direct.dispatch.challenges.validate({
+        participation: this.participation,
+        result: this.resultInput
+      });
+    }
+  }
 
   public submitSolution() {
     if (!this.solutionUrl || !this.participation) {
@@ -139,5 +171,11 @@ export default class ChallengeView extends Vue {
 <style lang="scss" scoped>
 .admin-panel {
   margin-bottom: 15px;
+}
+
+.validationFailed {
+  color: red;
+  font-weight: bold;
+  font-size: larger;
 }
 </style>

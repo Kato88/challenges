@@ -55,15 +55,24 @@ const mod = {
       state.participations.push(participation);
     },
     SET_SOLUTION_URL(state: UserState, payload: { solutionUrl: string, participationId: string }) {
-      const participationIndex = state.participations.findIndex((p => p.id === payload.participationId));
+      const participationIndex = state.participations.findIndex(((p) => p.id === payload.participationId));
       if (participationIndex > -1) {
         state.participations[participationIndex].solutionUrl = payload.solutionUrl;
       }
     },
-    SET_PARTICIPATION_POINTS(state: UserState, payload: { participationId: string, points: number }) {
-      const participationIndex = state.participations.findIndex((p => p.id === payload.participationId));
+    SET_PARTICIPATION_POINTS(state: UserState, payload: Participation) {
+      const participationIndex = state.participations.findIndex(((p) => p.id === payload.id));
       if (participationIndex > -1) {
-        state.participations[participationIndex].points = payload.points;
+        const part = Object.assign({}, state.participations[participationIndex]);
+        
+        for (const key in payload) {
+          if (payload.hasOwnProperty(key)) {
+            // @ts-ignore
+            part[key] = payload[key]
+          }
+        }
+
+        state.participations.splice(participationIndex, 1, part);
       }
     }
   },

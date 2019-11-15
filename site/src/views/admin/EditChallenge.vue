@@ -33,19 +33,19 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
+import { Vue, Component } from 'vue-property-decorator';
 // require styles
-import "quill/dist/quill.core.css";
-import "quill/dist/quill.snow.css";
-import "quill/dist/quill.bubble.css";
+import 'quill/dist/quill.core.css';
+import 'quill/dist/quill.snow.css';
+import 'quill/dist/quill.bubble.css';
 
-import { quillEditor } from "vue-quill-editor";
-import { Challenge } from "../../../../shared/types";
+import { quillEditor } from 'vue-quill-editor';
+import { Challenge } from '../../../../shared/types';
 
 @Component({
   components: {
-    quillEditor
-  }
+    quillEditor,
+  },
 })
 export default class EditChallenge extends Vue {
   public challenge!: Challenge;
@@ -60,7 +60,7 @@ export default class EditChallenge extends Vue {
 
   public created() {
     const challenge = this.$store.direct.state.challenges.challenges.find(
-      (c: Challenge) => c.id === this.challengeId
+      (c: Challenge) => c.id === this.challengeId,
     ) as Challenge;
 
     if (!challenge) {
@@ -70,14 +70,14 @@ export default class EditChallenge extends Vue {
         teaser: '',
         description: '',
         difficulty: 0,
-      }
+      };
     } else {
       this.challenge = {
         id: challenge.id,
         title: challenge.title,
         teaser: challenge.teaser,
         description: challenge.description,
-        difficulty: challenge.difficulty
+        difficulty: challenge.difficulty,
       };
     }
 
@@ -88,6 +88,7 @@ export default class EditChallenge extends Vue {
   }
 
   public save() {
+    this.challenge.difficulty = Number(this.challenge.difficulty);
     this.$store.direct.dispatch.challenges.save(this.challenge);
   }
 }

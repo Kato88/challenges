@@ -24,12 +24,10 @@ new Vue({
     this.$store.direct.commit.SET_APP(app);
     firebase.auth().onAuthStateChanged((user) => {
       if (user) {
-        // this.$router.push('/home');
+        // this.$router.push({name: 'home' });
         this.$store.direct.commit.user.SET_USER(user);
         this.$store.direct.dispatch.user.loadProfile(user);
         this.$store.direct.dispatch.user.loadParticipations(user);
-      } else {
-        this.$router.push('/login');
       }
      });
     },

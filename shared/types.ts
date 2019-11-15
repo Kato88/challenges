@@ -9,6 +9,7 @@ export interface ValidateResultRequestBody {
     userId: string;
     challengeId: string;
     result: string;
+    isValid?: boolean;
 }
 
 export interface UploadSolutionRequestBody {
@@ -47,6 +48,10 @@ export interface ValidationResultResponse {
     isValid: boolean;
     error?: string;
     participation?: Participation;
+}
+
+export interface SubmitSolutionResponse {
+  points: number;
 }
 
 export interface CreateParticipationResponse {

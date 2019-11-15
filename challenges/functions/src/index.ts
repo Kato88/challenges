@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CreateParticipationRequestBody, Participation, ValidateResultRequestBody, CreateParticipationResponse, ValidationResultResponse, UploadSolutionRequestBody, Challenge } from '../../../shared/types';
+import { CreateParticipationRequestBody, Participation, ValidateResultRequestBody, CreateParticipationResponse, ValidationResultResponse, UploadSolutionRequestBody, Challenge, SubmitSolutionResponse } from '../../../shared/types';
 import * as cors from 'cors';
 import challenges from './challenges/index';
 import { IResultValidator } from './challenges/IResultValidator';
@@ -131,19 +131,40 @@ export const uploadSolution = functions
         return;
       }
 
+      const participation = (await admin
+        .firestore()
+        .collection('participations')
+        .doc(data.participationId)
+        .get()).data() as Participation;
+
+      if (!participation || participation === undefined) {
+        console.log('PARTICIPATION NOT FOUND');
+        response.status(400).send();
+        return;
+      }
+
+      if (!participation.points) {
+        console.log('PARTICIPATION HAS NO POINTS');
+        response.status(400).send();
+        return;
+      }
+
+      participation.points += 1;
+
       await admin.firestore().collection('participations').doc(data.participationId).update({
-        solutionUrl: data.solutionUrl
+        solutionUrl: data.solutionUrl,
+        points: participation.points + 1,
       });
 
       console.log('UPDATED PARTICIPATION WITH SOLUTION URL');
-      response.status(200).send();
+      response.status(200).send({ points: participation.points } as SubmitSolutionResponse);
     });
   });
 
-  async function calculatePointsForChallenge(challengeId: string): Promise<number> {
-    const challenge = await admin.firestore().collection('challenges').doc(challengeId).get();
-    return (challenge.data() as Challenge).difficulty * 10;
-  }
+async function calculatePointsForChallenge(challengeId: string): Promise<number> {
+  const challenge = await admin.firestore().collection('challenges').doc(challengeId).get();
+  return ((challenge.data() as Challenge).difficulty + 1) * 3;
+}
 
 async function retrieveParticipation(challengeId: string, userId: string): Promise<Participation | null> {
   const querySnapshot = await admin.firestore()

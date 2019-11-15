@@ -18,7 +18,7 @@ import * as firebaseui from 'firebaseui';
   components: {},
   mounted() {
     const uiConfig = {
-      signInSuccessUrl: '/#/home',
+      signInSuccessUrl: '/',
       signInOptions: [
         firebase.auth.GoogleAuthProvider.PROVIDER_ID,
         firebase.auth.EmailAuthProvider.PROVIDER_ID,

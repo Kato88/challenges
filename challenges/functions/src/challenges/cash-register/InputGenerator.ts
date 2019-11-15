@@ -5,8 +5,6 @@ export default class InputGenerator implements IInputGenerator {
         const output = [];
         const numberOfLines = Randomizer.getRandomNumber(444);
         
-        
-
         for (let i = 0; i < numberOfLines; i++) {
             output.push(Randomizer.getRandomNumber(99));
         }

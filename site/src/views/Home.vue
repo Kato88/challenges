@@ -13,6 +13,16 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="4">
+        <v-card>
+          <v-card-text>
+            This site is still in progress! Some loading animations do not work. 
+            If you validate a solution or submitting your solution it takes a couple of seconds.
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 </template>
 

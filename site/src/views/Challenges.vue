@@ -8,7 +8,7 @@
         <v-btn @click="createNew" v-if="isAdmin" text icon><v-icon>mdi-plus</v-icon></v-btn>
         </v-card-title>
       <v-card-text>
-        <v-data-table :items="challenges" :headers="headers">
+        <v-data-table :loading="loading" :items="challenges" :headers="headers">
           <template v-slot:item="{ item }">
             <v-hover v-slot:default="{ hover }">
               <tr
@@ -33,35 +33,34 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { ChallengeDifficulties } from "../store/challenges/types";
-import { Challenge } from "../../../shared/types";
+import { Vue, Component } from 'vue-property-decorator';
+import { Challenge, ChallengeDifficulties } from '../../../shared/types';
 
 @Component({
-  components: {}
+  components: {},
 })
 export default class Challenges extends Vue {
   public headers = [
     {
-      text: "Difficulty",
-      align: "left",
+      text: 'Difficulty',
+      align: 'left',
       sortable: true,
-      value: "difficulty",
-      width: "100px"
+      value: 'difficulty',
+      width: '100px',
     },
     {
-      text: "Title",
-      align: "left",
+      text: 'Title',
+      align: 'left',
       sortable: true,
-      value: "title",
-      width: "200px",
+      value: 'title',
+      width: '200px',
     },
     {
-      text: "Teaser",
-      align: "left",
+      text: 'Teaser',
+      align: 'left',
       sortable: false,
-      value: "teaser",
-    }
+      value: 'teaser',
+    },
   ];
 
   get challenges() {
@@ -70,6 +69,10 @@ export default class Challenges extends Vue {
 
   get isAdmin(): boolean {
     return this.$store.direct.getters.user.isAdmin;
+  }
+
+  get loading(): boolean {
+    return this.$store.direct.state.challenges.loading;
   }
 
   public created() {
@@ -81,35 +84,35 @@ export default class Challenges extends Vue {
   public getDifficultyColor(difficulty: ChallengeDifficulties): string {
     switch (difficulty) {
       case ChallengeDifficulties.easy:
-        return "green";
+        return 'green';
       case ChallengeDifficulties.medium:
-        return "orange";
+        return 'orange';
       case ChallengeDifficulties.hard:
-        return "red";
+        return 'red';
     }
   }
 
   public getDifficultyName(difficulty: ChallengeDifficulties) {
     switch (difficulty) {
       case ChallengeDifficulties.easy:
-        return "easy";
+        return 'easy';
       case ChallengeDifficulties.medium:
-        return "medium";
+        return 'medium';
       case ChallengeDifficulties.hard:
-        return "hard";
+        return 'hard';
     }
   }
 
   public goTo(challenge: Challenge) {
     this.$router.push({
-      name: "challenge",
-      params: { id: challenge.id }
+      name: 'challenge',
+      params: { id: challenge.id },
     });
   }
 
   public createNew() {
     this.$router.push({
-      name: 'editChallenge'
+      name: 'editChallenge',
     });
   }
 }
