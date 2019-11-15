@@ -11,6 +11,26 @@ export interface ValidateResultRequestBody {
     result: string;
 }
 
+export interface UploadSolutionRequestBody {
+  participationId: string;
+  solutionUrl: string;
+}
+
+export interface Challenge {
+  id: string;
+  title: string;
+  teaser: string;
+  description: string;
+  difficulty: ChallengeDifficulties;
+}
+
+export enum ChallengeDifficulties {
+  easy = 0,
+  medium = 1,
+  hard = 2,
+}
+
+
 export interface Participation {
     id: string;
     userId: string;
@@ -26,6 +46,7 @@ export interface Participation {
 export interface ValidationResultResponse {
     isValid: boolean;
     error?: string;
+    participation?: Participation;
 }
 
 export interface CreateParticipationResponse {

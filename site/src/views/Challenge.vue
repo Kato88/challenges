@@ -35,7 +35,7 @@
             >Validate Result</v-btn>
           </v-card-text>
         </v-card>
-        <v-card>
+        <v-card v-if="participation">
           <v-card-title>You've done it!</v-card-title>
           <v-card-text v-if="!participation.solutionUrl">
             Congratulations you have mastered this challenge and earned
@@ -61,8 +61,7 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { Challenge } from "../store/challenges/types";
-import { Participation } from "../../../shared/types";
+import { Participation, Challenge } from "../../../shared/types";
 
 @Component({
   components: {}

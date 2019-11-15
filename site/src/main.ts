@@ -5,11 +5,13 @@ import store from './store';
 import vuetify from './plugins/vuetify';
 import * as firebase from 'firebase';
 import firebaseConfig from './firebase.config';
+import VuePageTransition from 'vue-page-transition';
 
 // require styles
 import 'firebaseui/dist/firebaseui.css';
 
 Vue.config.productionTip = false;
+Vue.use(VuePageTransition);
 
 new Vue({
   router,

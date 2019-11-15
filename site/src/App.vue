@@ -20,7 +20,9 @@
       </v-btn>
     </v-app-bar>
     <v-content>
-      <router-view></router-view>
+      <vue-page-transition name="fade">
+        <router-view></router-view>
+      </vue-page-transition>
     </v-content>
   </v-app>
 </template>

@@ -1,7 +1,12 @@
 <template>
   <v-container>
     <v-card>
-      <v-card-title>Challenges</v-card-title>
+      <v-card-title>
+        Challenges
+        <v-spacer v-if="isAdmin">
+        </v-spacer>
+        <v-btn @click="createNew" v-if="isAdmin" text icon><v-icon>mdi-plus</v-icon></v-btn>
+        </v-card-title>
       <v-card-text>
         <v-data-table :items="challenges" :headers="headers">
           <template v-slot:item="{ item }">
@@ -29,7 +34,8 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { ChallengeDifficulties, Challenge } from "../store/challenges/types";
+import { ChallengeDifficulties } from "../store/challenges/types";
+import { Challenge } from "../../../shared/types";
 
 @Component({
   components: {}
@@ -98,6 +104,12 @@ export default class Challenges extends Vue {
     this.$router.push({
       name: "challenge",
       params: { id: challenge.id }
+    });
+  }
+
+  public createNew() {
+    this.$router.push({
+      name: 'editChallenge'
     });
   }
 }

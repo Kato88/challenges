@@ -3,8 +3,11 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col>
+          <v-col cols="8">
             <v-text-field label="Title" v-model="challenge.title"></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-text-field label="Difficulty" type="number" v-model="challenge.difficulty"></v-text-field>
           </v-col>
         </v-row>
         <v-row>
@@ -31,13 +34,13 @@
 
 <script lang="ts">
 import { Vue, Component } from "vue-property-decorator";
-import { Challenge } from "../../store/challenges/types";
 // require styles
 import "quill/dist/quill.core.css";
 import "quill/dist/quill.snow.css";
 import "quill/dist/quill.bubble.css";
 
 import { quillEditor } from "vue-quill-editor";
+import { Challenge } from "../../../../shared/types";
 
 @Component({
   components: {
@@ -60,13 +63,24 @@ export default class EditChallenge extends Vue {
       (c: Challenge) => c.id === this.challengeId
     ) as Challenge;
 
-    this.challenge = {
-      id: challenge.id,
-      title: challenge.title,
-      teaser: challenge.teaser,
-      description: challenge.description,
-      difficulty: challenge.difficulty
-    };
+    if (!challenge) {
+      this.challenge = {
+        id: '',
+        title: '',
+        teaser: '',
+        description: '',
+        difficulty: 0,
+      }
+    } else {
+      this.challenge = {
+        id: challenge.id,
+        title: challenge.title,
+        teaser: challenge.teaser,
+        description: challenge.description,
+        difficulty: challenge.difficulty
+      };
+    }
+
   }
 
   public onEditorChange({ html }: any) {
