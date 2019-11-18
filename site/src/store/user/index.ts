@@ -64,17 +64,17 @@ const mod = {
       const participationIndex = state.participations.findIndex(((p) => p.id === payload.id));
       if (participationIndex > -1) {
         const part = Object.assign({}, state.participations[participationIndex]);
-        
+
         for (const key in payload) {
           if (payload.hasOwnProperty(key)) {
             // @ts-ignore
-            part[key] = payload[key]
+            part[key] = payload[key];
           }
         }
 
         state.participations.splice(participationIndex, 1, part);
       }
-    }
+    },
   },
   getters: {
     isAuthenticated(state: UserState): boolean {

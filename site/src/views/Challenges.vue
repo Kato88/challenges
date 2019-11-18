@@ -14,7 +14,6 @@
               <tr
                 @click="goTo(item)"
                 class="pointer transition-swing"
-                :class="`elevation-${hover ? 12 : 0}`"
               >
                 <td>{{item.title}}</td>
                 <td>

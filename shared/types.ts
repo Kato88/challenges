@@ -23,6 +23,11 @@ export interface Challenge {
   teaser: string;
   description: string;
   difficulty: ChallengeDifficulties;
+  otherSolutions?: Array<{
+    userId: string;
+    participationId: string;
+    solutionUrl: string;
+  }>;
 }
 
 export enum ChallengeDifficulties {

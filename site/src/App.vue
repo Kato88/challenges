@@ -9,7 +9,7 @@
       <v-btn to="/challenges" text>
         <span class="mr-2">Challenges</span>
       </v-btn>
-      <v-btn text>
+      <v-btn text to="/leaderboard">
         <span class="mr-2">Leaderboards</span>
       </v-btn>
       <v-btn text to="/login" v-if="!isAuthenticated">

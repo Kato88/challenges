@@ -7,6 +7,7 @@ export interface ChallengesState {
     loading: boolean;
     validating: boolean;
     validationFailed: boolean;
+    loadingSolutions: boolean;
 }
 
 

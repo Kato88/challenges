@@ -3,11 +3,52 @@
     <v-row>
       <v-col cols="9">
         <v-card>
-          <v-card-title>{{challenge.title}}</v-card-title>
-          <v-card-text>
-            <p>{{challenge.teaser}}</p>
-          </v-card-text>
-          <v-card-text v-html="challenge.description"></v-card-text>
+          <v-tabs v-model="tab">
+            <v-btn text icon @click="goToChallenges" color="primary" style="top: 5px; left: 5px;">
+              <v-icon color="primary">mdi-arrow-left</v-icon>
+            </v-btn>
+            <v-tab href="#tab-challenge">{{challenge.title}} Challenge</v-tab>
+            <v-tab href="#tab-other-solutions">Other solutions</v-tab>
+          </v-tabs>
+          <v-tabs-items v-model="tab">
+            <v-tab-item value="tab-challenge">
+              <v-card-text>
+                <p>{{challenge.teaser}}</p>
+              </v-card-text>
+              <v-card-text v-html="challenge.description"></v-card-text>
+            </v-tab-item>
+            <v-tab-item value="tab-other-solutions">
+              <v-card-text v-if="!showOtherSolutions">
+                To see solutions that were submitted by other contestans you need to share your
+                solution aswell. Also by sharing your solution you can earn some extra points!
+              </v-card-text>
+              <v-card-text v-if="showOtherSolutions" class>
+                <v-progress-circular v-if="loadingSolutions" indeterminate color="primary"></v-progress-circular>
+                <v-tabs vertical v-model="solutionTab">
+                  <v-tab
+                    v-for="(solution, index) in challenge.otherSolutions"
+                    :key="'tab-' +solution.participationId"
+                    :href="'#tab' + solution.participationId"
+                  >{{index + 1}}</v-tab>
+
+                  <v-tab-item
+                    v-for="solution in challenge.otherSolutions"
+                    :key="'item' + solution.participationId"
+                    :value="'tab' + solution.participationId"
+                    style="height: 500px;"
+                  >
+                    <iframe
+                      v-if="isPastebinUrl(solution.solutionUrl)"
+                      :src="toEmbedUrl(solution.solutionUrl)"
+                      style="height: 100%; width: 100%;"
+                    ></iframe>
+                    <a v-else :href="solution.solutionUrl">{{solution.solutionUrl}}</a>
+                  </v-tab-item>
+                </v-tabs>
+                <v-tabs-items v-model="solutionTab"></v-tabs-items>
+              </v-card-text>
+            </v-tab-item>
+          </v-tabs-items>
         </v-card>
       </v-col>
       <v-col cols="3">
@@ -69,15 +110,13 @@
 </template>
 
 <script lang="ts">
-import { Vue, Component } from "vue-property-decorator";
-import { Participation, Challenge } from "../../../shared/types";
+import { Vue, Component, Watch } from 'vue-property-decorator';
+import { Participation, Challenge } from '../../../shared/types';
 
 @Component({
-  components: {}
+  components: {},
 })
 export default class ChallengeView extends Vue {
-  public resultInput = "";
-  public solutionUrl = "";
 
   get challengeId(): string {
     return this.$route.params.id;
@@ -93,7 +132,7 @@ export default class ChallengeView extends Vue {
 
   get challenge(): Challenge {
     const challenge = this.$store.direct.state.challenges.challenges.find(
-      (c: Challenge) => c.id === this.challengeId
+      (c: Challenge) => c.id === this.challengeId,
     ) as Challenge;
 
     if (!challenge) {
@@ -105,7 +144,7 @@ export default class ChallengeView extends Vue {
 
   get participation(): Participation {
     const participation = this.$store.direct.state.user.participations.find(
-      (p: Participation) => p.challengeId === this.challengeId
+      (p: Participation) => p.challengeId === this.challengeId,
     ) as Participation;
 
     return participation;
@@ -127,14 +166,41 @@ export default class ChallengeView extends Vue {
     return this.$store.direct.state.challenges.validationFailed;
   }
 
-  created() {
+  get showOtherSolutions(): boolean {
+    if (!this.participation || !this.participation.solutionUrl) {
+      return false;
+    } 
+
+    return this.participation.solutionUrl.length > 0;
+  }
+
+  get loadingSolutions(): boolean {
+    return this.$store.direct.state.challenges.loadingSolutions;
+  }
+
+  public resultInput = '';
+  public solutionUrl = '';
+  public tab = null;
+  public solutionTab = null;
+  private otherSolutionsLoaded = false;
+
+  @Watch('tab')
+  public onTabChanged(currentTab: string) {
+    if (this.otherSolutionsLoaded || currentTab !== 'tab-other-solutions') {
+      return;
+    }
+
+    this.loadOtherSoltuions();
+  }
+
+  public created() {
     this.$store.direct.commit.challenges.SET_VALIDATION_FAILED(false);
   }
 
   public edit() {
     this.$router.push({
-      name: "editChallenge",
-      params: { id: this.challengeId }
+      name: 'editChallenge',
+      params: { id: this.challengeId },
     });
   }
 
@@ -143,14 +209,14 @@ export default class ChallengeView extends Vue {
   }
 
   public downloadInput() {
-    window.open(this.participation.inputUrl, "_blank");
+    window.open(this.participation.inputUrl, '_blank');
   }
 
   public validateInput() {
     if (this.resultInput) {
       this.$store.direct.dispatch.challenges.validate({
         participation: this.participation,
-        result: this.resultInput
+        result: this.resultInput,
       });
     }
   }
@@ -162,8 +228,36 @@ export default class ChallengeView extends Vue {
 
     this.$store.direct.dispatch.challenges.submitSolution({
       solutionUrl: this.solutionUrl,
-      participationId: this.participation.id
+      participationId: this.participation.id,
     });
+  }
+
+  public async loadOtherSoltuions() {
+    this.$store.direct.dispatch.challenges.loadChallengeSolutions(
+      this.challengeId,
+    );
+    this.otherSolutionsLoaded = true;
+  }
+
+  public isPastebinUrl(url: string) {
+    if (!url) {
+      return false;
+    }
+
+    return url.indexOf('https://pastebin.com') > -1;
+  }
+
+  public toEmbedUrl(url: string) {
+    // from: https://pastebin.com/MegNxtrv
+    // to: https://pastebin.com/embed_iframe/MegNxtrv
+
+    const lastIndex = url.lastIndexOf('/');
+    const id = url.substring(lastIndex);
+    return `https://pastebin.com/embed_iframe${id}`;
+  }
+
+  public goToChallenges() {
+    this.$router.push({ name: 'challenges' });
   }
 }
 </script>
@@ -177,5 +271,9 @@ export default class ChallengeView extends Vue {
   color: red;
   font-weight: bold;
   font-size: larger;
+}
+
+.otherSolutions {
+  min-height: 800px;
 }
 </style>

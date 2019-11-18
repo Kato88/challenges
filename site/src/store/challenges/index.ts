@@ -16,6 +16,7 @@ const mod = {
     submittingSolution: false,
     validating: false,
     validationFailed: false,
+    loadingSolutions: false,
   } as ChallengesState,
   actions: {
     async load(context: ActionContext<any, any>) {
@@ -87,7 +88,7 @@ const mod = {
       const { commit, rootCommit, rootState } = moduleActionContext(context, mod);
       commit.SET_VALIDATING(true);
       commit.SET_VALIDATION_FAILED(false);
-      
+
       const response = await axios.post<ValidationResultResponse>('https://europe-west2-challenge-83ceb.cloudfunctions.net/validateResult', {
         challengeId: payload.participation.challengeId,
         userId: rootState.user.profile.uid,
@@ -125,6 +126,36 @@ const mod = {
 
       commit.SET_SUBMITTING_SOLUTION(false);
     },
+    async loadChallengeSolutions(context: any, challengeId: string) {
+      const { commit, rootState, rootCommit } = moduleActionContext(context, mod);
+
+      commit.SET_LOADING_SOLUTIONS(true);
+
+      const solutions: any[] = [];
+      const solvedParticipations = await rootState.db
+        .collection('participations')
+        .where('challengeId', '==', challengeId)
+        .get();
+
+      solvedParticipations.forEach((doc) => {
+        const participation = doc.data() as Participation;
+
+        if (participation.end && participation.solutionUrl) {
+          solutions.push({
+            userId: participation.userId,
+            participationId: participation.id,
+            solutionUrl: participation.solutionUrl,
+          });
+        }
+      });
+
+      commit.SET_OTHER_SOLUTIONS({
+        challengeId,
+        solutions,
+      });
+
+      commit.SET_LOADING_SOLUTIONS(false);
+    },
   },
   mutations: {
     SET_CHALLENGES(state: ChallengesState, challenges: Challenge[]) {
@@ -144,6 +175,9 @@ const mod = {
     SET_LOADING(state: ChallengesState, loading: boolean) {
       state.loading = loading;
     },
+    SET_LOADING_SOLUTIONS(state: ChallengesState, loading: boolean) {
+      state.loadingSolutions = loading;
+    },
     SET_SUBMITTING_SOLUTION(state: ChallengesState, submitting: boolean) {
       state.submittingSolution = submitting;
     },
@@ -152,7 +186,14 @@ const mod = {
     },
     SET_VALIDATION_FAILED(state: ChallengesState, validationFailed: boolean) {
       state.validationFailed = validationFailed;
-    }
+    },
+    SET_OTHER_SOLUTIONS(state: ChallengesState, payload: { challengeId: string, solutions: any[]}) {
+      const challengeIndex = state.challenges.findIndex((c) => c.id === payload.challengeId);
+
+      if (challengeIndex > -1) {
+        state.challenges[challengeIndex].otherSolutions = payload.solutions;
+      }
+    },
   },
   getters: {},
 } as const;

@@ -5,6 +5,7 @@ import Challenges from '../views/Challenges.vue';
 import ChallengeView from '../views/Challenge.vue';
 import Login from '../views/Login.vue';
 import EditChallenge from '../views/admin/EditChallenge.vue';
+import Leaderboard from '../views/Leaderboard.vue';
 
 Vue.use(VueRouter);
 
@@ -33,6 +34,11 @@ const routes = [
     path: '/challenge/:id/edit',
     name: 'editChallenge',
     component: EditChallenge,
+  },
+  {
+    path: '/leaderboard',
+    name: 'leaderboard',
+    component: Leaderboard,
   },
 ];
 
