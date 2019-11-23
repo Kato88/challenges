@@ -1,11 +1,16 @@
 import { Participation } from '../../../../shared/types';
 
 export interface UserState {
-    profile: any;
-    isAdmin: boolean;
+    user: firebase.User;
+    profile: Profile;
     participations: Participation[];
 }
 
 export interface UserRights {
     isAdmin: boolean;
+}
+
+export interface Profile extends UserRights {
+    name?: string;
+    email?: string;
 }

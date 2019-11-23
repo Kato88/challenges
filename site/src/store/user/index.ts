@@ -1,4 +1,4 @@
-import { UserState } from './types';
+import { UserState, Profile } from './types';
 import * as firebase from 'firebase';
 import { moduleActionContext } from '..';
 import { Participation } from '../../../../shared/types';
@@ -6,16 +6,31 @@ import { Participation } from '../../../../shared/types';
 const mod = {
   namespaced: true,
   state: {
-    profile: null,
-    isAdmin: false,
+    user: {} as firebase.User,
+    profile: { name: '', email: '', isAdmin: false},
     participations: [],
   } as UserState,
   actions: {
-    loadProfile(context: any, user: firebase.User) {
+    async loadProfile(context: any, user: firebase.User) {
       const { commit, rootState } = moduleActionContext(context, mod);
-      rootState.db.collection('users').doc(user.uid).get().then((doc) => {
-        commit.SET_RIGHTS(doc.data());
-      });
+      const profileDoc = await rootState.db.collection('users').doc(user.uid).get();
+      let profile = {} as Profile;
+
+      if (!profileDoc || !profileDoc.exists) {
+        profile.name = user.displayName as string;
+        profile.email = user.email as string;
+        profile.isAdmin = false;
+
+        if (!profile.name) {
+          profile.name = profile.email.substr(0, profile.email.indexOf('@'));
+        }
+
+        rootState.db.collection('users').doc(user.uid).set(profile);
+      } else {
+        profile = profileDoc.data() as Profile;
+      }
+
+      commit.SET_PROFILE(profile);
     },
     async loadParticipations(context: any, user: firebase.User) {
       const { commit, rootState } = moduleActionContext(context, mod);
@@ -43,10 +58,10 @@ const mod = {
   },
   mutations: {
     SET_USER(state: UserState, user: any) {
-      state.profile = user;
+      state.user = user;
     },
-    SET_RIGHTS(state: UserState, userRights: any) {
-      state.isAdmin = userRights.isAdmin;
+    SET_PROFILE(state: UserState, profile: Profile) {
+      state.profile = profile;
     },
     SET_PARTICIPATIONS(state: UserState, participations: Participation[]) {
       state.participations = participations;
@@ -81,7 +96,7 @@ const mod = {
       return state.profile !== null && state.profile.email !== null;
     },
     isAdmin(state: UserState): boolean {
-      return state.profile !== null && state.isAdmin === true;
+      return state.profile !== null && state.profile.isAdmin === true;
     },
   },
 } as const;

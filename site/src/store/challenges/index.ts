@@ -71,7 +71,8 @@ const mod = {
       const result = await axios
         .post('https://europe-west2-challenge-83ceb.cloudfunctions.net/createParticipation', {
           challengeId,
-          userId: rootState.user.profile.uid,
+          userId: rootState.user.user.uid,
+          userName: rootState.user.profile.name,
         } as CreateParticipationRequestBody);
 
       const resultData = result.data as CreateParticipationResponse;
@@ -91,7 +92,7 @@ const mod = {
 
       const response = await axios.post<ValidationResultResponse>('https://europe-west2-challenge-83ceb.cloudfunctions.net/validateResult', {
         challengeId: payload.participation.challengeId,
-        userId: rootState.user.profile.uid,
+        userId: rootState.user.user.uid,
         result: payload.result,
       } as ValidateResultRequestBody);
 
@@ -145,6 +146,7 @@ const mod = {
             userId: participation.userId,
             participationId: participation.id,
             solutionUrl: participation.solutionUrl,
+            userName: participation.userName,
           });
         }
       });

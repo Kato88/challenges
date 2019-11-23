@@ -43,6 +43,7 @@ export const createParticipation =
         const participation = {
           challengeId: `${data.challengeId}`,
           userId: `${data.userId}`,
+          userName: data.userName,
           start: admin.firestore.Timestamp.fromDate(new Date()),
           inputUrl: urls[0],
         } as Participation;

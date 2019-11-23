@@ -29,7 +29,7 @@
                     v-for="(solution, index) in challenge.otherSolutions"
                     :key="'tab-' +solution.participationId"
                     :href="'#tab' + solution.participationId"
-                  >{{index + 1}}</v-tab>
+                  >{{solution.userName ? solution.userName : (index + 1)}}</v-tab>
 
                   <v-tab-item
                     v-for="solution in challenge.otherSolutions"
@@ -169,7 +169,7 @@ export default class ChallengeView extends Vue {
   get showOtherSolutions(): boolean {
     if (!this.participation || !this.participation.solutionUrl) {
       return false;
-    } 
+    }
 
     return this.participation.solutionUrl.length > 0;
   }

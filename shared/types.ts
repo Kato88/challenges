@@ -2,6 +2,7 @@ import * as firebase from 'firebase';
 
 export interface CreateParticipationRequestBody {
     userId: string;
+    userName: string;
     challengeId: string;
 }
 
@@ -40,6 +41,7 @@ export enum ChallengeDifficulties {
 export interface Participation {
     id: string;
     userId: string;
+    userName: string;
     challengeId: string;
     inputUrl: string;
     start: firebase.firestore.Timestamp;
