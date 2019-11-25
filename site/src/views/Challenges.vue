@@ -3,18 +3,16 @@
     <v-card>
       <v-card-title>
         Challenges
-        <v-spacer v-if="isAdmin">
-        </v-spacer>
-        <v-btn @click="createNew" v-if="isAdmin" text icon><v-icon>mdi-plus</v-icon></v-btn>
-        </v-card-title>
+        <v-spacer v-if="isAdmin"></v-spacer>
+        <v-btn @click="createNew" v-if="isAdmin" text icon>
+          <v-icon>mdi-plus</v-icon>
+        </v-btn>
+      </v-card-title>
       <v-card-text>
         <v-data-table :loading="loading" :items="challenges" :headers="headers">
           <template v-slot:item="{ item }">
             <v-hover v-slot:default="{ hover }">
-              <tr
-                @click="goTo(item)"
-                class="pointer transition-swing"
-              >
+              <tr @click="goTo(item)" class="pointer transition-swing">
                 <td>{{item.title}}</td>
                 <td>
                   <v-chip style="min-width: 80px" :color="getDifficultyColor(item.difficulty)" dark>
@@ -22,6 +20,7 @@
                   </v-chip>
                 </td>
                 <td>{{item.teaser}}</td>
+                <td v-if="isAdmin">{{item.public ? 'Yes' : 'No'}}</td>
               </tr>
             </v-hover>
           </template>
@@ -63,7 +62,13 @@ export default class Challenges extends Vue {
   ];
 
   get challenges() {
-    return this.$store.direct.state.challenges.challenges;
+    if (this.isAdmin) {
+      return this.$store.direct.state.challenges.challenges;
+    } else {
+      return this.$store.direct.state.challenges.challenges.filter(
+        (x) => x.public === true,
+      );
+    }
   }
 
   get isAdmin(): boolean {
@@ -77,6 +82,16 @@ export default class Challenges extends Vue {
   public created() {
     if (!this.challenges || this.challenges.length === 0) {
       this.$store.direct.dispatch.challenges.load();
+    }
+
+    if (this.isAdmin) {
+      this.headers.push({
+        text: 'public',
+        align: 'left',
+        sortable: false,
+        width: '30px',
+        value: 'public',
+      });
     }
   }
 

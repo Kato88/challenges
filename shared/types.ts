@@ -24,6 +24,7 @@ export interface Challenge {
   teaser: string;
   description: string;
   difficulty: ChallengeDifficulties;
+  public?: boolean;
   otherSolutions?: Array<{
     userId: string;
     participationId: string;

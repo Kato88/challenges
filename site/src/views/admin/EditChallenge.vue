@@ -3,11 +3,16 @@
     <v-card>
       <v-card-text>
         <v-row>
-          <v-col cols="8">
+          <v-col cols="12">
             <v-text-field label="Title" v-model="challenge.title"></v-text-field>
           </v-col>
+        </v-row>
+        <v-row>
           <v-col cols="4">
             <v-text-field label="Difficulty" type="number" v-model="challenge.difficulty"></v-text-field>
+          </v-col>
+          <v-col cols="4">
+            <v-switch v-model="challenge.public" label="Public"></v-switch>
           </v-col>
         </v-row>
         <v-row>
@@ -55,7 +60,7 @@ export default class EditChallenge extends Vue {
   }
 
   get saving(): boolean {
-      return this.$store.direct.state.challenges.saving;
+    return this.$store.direct.state.challenges.saving;
   }
 
   public created() {
@@ -70,6 +75,7 @@ export default class EditChallenge extends Vue {
         teaser: '',
         description: '',
         difficulty: 0,
+        public: false,
       };
     } else {
       this.challenge = {
@@ -78,9 +84,9 @@ export default class EditChallenge extends Vue {
         teaser: challenge.teaser,
         description: challenge.description,
         difficulty: challenge.difficulty,
+        public: challenge.public,
       };
     }
-
   }
 
   public onEditorChange({ html }: any) {
