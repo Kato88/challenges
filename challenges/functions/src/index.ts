@@ -1,6 +1,6 @@
 import * as functions from 'firebase-functions';
 import * as admin from 'firebase-admin';
-import { CreateParticipationRequestBody, Participation, ValidateResultRequestBody, CreateParticipationResponse, ValidationResultResponse, UploadSolutionRequestBody, Challenge, SubmitSolutionResponse } from '../../../shared/types';
+import { CreateParticipationRequestBody, Participation, ValidateResultRequestBody, CreateParticipationResponse, ValidationResultResponse, UploadSolutionRequestBody, Challenge, SubmitSolutionResponse, LeaderboardEntry } from '../../../shared/types';
 import * as cors from 'cors';
 import challenges from './challenges/index';
 import { IResultValidator } from './challenges/IResultValidator';
@@ -107,10 +107,28 @@ export const validateResult = functions
         participation.end = admin.firestore.Timestamp.fromDate(new Date());
         participation.result = data.result;
         participation.points = await calculatePointsForChallenge(data.challengeId);
-        await admin.firestore()
-          .collection('participations')
-          .doc(participation.id)
-          .set(participation);
+
+        // @ts-ignore
+        const [_, leaderboardSnapshot] = await Promise.all([
+          admin.firestore()
+            .collection('participations')
+            .doc(participation.id)
+            .set(participation),
+          admin.firestore().collection('leaderboard').doc(data.userId).get()
+        ]);
+
+        if (leaderboardSnapshot.exists) {
+          const leaderboardEntry = leaderboardSnapshot.data() as LeaderboardEntry;
+          leaderboardEntry.points += participation.points;
+          await leaderboardSnapshot.ref.update({
+            points: leaderboardEntry.points
+          });
+        } else {
+          await leaderboardSnapshot.ref.set({
+            userName: participation.userName,
+            points: participation.points,
+          } as LeaderboardEntry);
+        }
 
         response.status(200).send({ isValid: true, participation: participation } as ValidationResultResponse);
       }
@@ -150,12 +168,26 @@ export const uploadSolution = functions
         return;
       }
 
-      participation.points += 1;
+      const extraPoints = 1;
 
-      await admin.firestore().collection('participations').doc(data.participationId).update({
-        solutionUrl: data.solutionUrl,
-        points: participation.points + 1,
-      });
+      participation.points += extraPoints;
+
+      // @ts-ignore
+      const [_, leaderboardSnapshot] = await Promise.all([
+        admin.firestore().collection('participations').doc(data.participationId).update({
+          solutionUrl: data.solutionUrl,
+          points: participation.points + 1,
+        }),
+        admin.firestore().collection('leaderboard').doc(participation.userId).get()
+      ]);
+
+      if (leaderboardSnapshot.exists) {
+        const leaderboardEntry = leaderboardSnapshot.data() as LeaderboardEntry;
+        leaderboardEntry.points += extraPoints;
+        await leaderboardSnapshot.ref.update({
+          points: leaderboardEntry.points
+        });
+      }
 
       console.log('UPDATED PARTICIPATION WITH SOLUTION URL');
       response.status(200).send({ points: participation.points } as SubmitSolutionResponse);

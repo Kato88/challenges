@@ -67,3 +67,9 @@ export interface CreateParticipationResponse {
     participationId: string;
     inputUrl: string;
 }
+
+export interface LeaderboardEntry {
+  id: string;
+  points: number;
+  userName: string;
+}

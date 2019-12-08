@@ -5,6 +5,7 @@ import { createDirectStore } from 'direct-vuex';
 
 import user from './user/index';
 import challenges from './challenges/index';
+import leaderboard from './leaderboard/index';
 
 Vue.use(Vuex);
 
@@ -16,6 +17,7 @@ const { store, rootActionContext, moduleActionContext } = createDirectStore({
  modules: {
     user,
     challenges,
+    leaderboard,
   },
   state: {
     db: {},

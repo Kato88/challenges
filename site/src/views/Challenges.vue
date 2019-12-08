@@ -15,9 +15,7 @@
               <tr @click="goTo(item)" class="pointer transition-swing">
                 <td>{{item.title}}</td>
                 <td>
-                  <v-chip style="min-width: 80px" :color="getDifficultyColor(item.difficulty)" dark>
-                    <span>{{ getDifficultyName(item.difficulty) }}</span>
-                  </v-chip>
+                  <v-icon v-for="index in (item.difficulty + 1)" :key="index" color="yellow">mdi-star</v-icon>
                 </td>
                 <td>{{item.teaser}}</td>
                 <td v-if="isAdmin">{{item.public ? 'Yes' : 'No'}}</td>
@@ -40,18 +38,18 @@ import { Challenge, ChallengeDifficulties } from '../../../shared/types';
 export default class Challenges extends Vue {
   public headers = [
     {
-      text: 'Difficulty',
-      align: 'left',
-      sortable: true,
-      value: 'difficulty',
-      width: '100px',
-    },
-    {
       text: 'Title',
       align: 'left',
       sortable: true,
       value: 'title',
       width: '200px',
+    },
+    {
+      text: 'Difficulty',
+      align: 'left',
+      sortable: true,
+      value: 'difficulty',
+      width: '100px',
     },
     {
       text: 'Teaser',
