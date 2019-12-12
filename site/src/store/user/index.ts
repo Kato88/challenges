@@ -93,7 +93,7 @@ const mod = {
   },
   getters: {
     isAuthenticated(state: UserState): boolean {
-      return state.profile !== null && state.profile.email !== null;
+      return state.user !== null && state.user.uid != null;
     },
     isAdmin(state: UserState): boolean {
       return state.profile !== null && state.profile.isAdmin === true;

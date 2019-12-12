@@ -88,7 +88,7 @@
             to
             <a
               href="https://pastebin.com/"
-            >pastebin.com</a> (or something similar) and share your URL.
+            >pastebin.com</a> and share your URL.
           </v-card-text>
           <v-card-text v-if="!participation.solutionUrl">
             <v-text-field label="Url to your solution" v-model="solutionUrl"></v-text-field>

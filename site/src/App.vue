@@ -42,6 +42,7 @@ export default class App extends Vue {
   public logout() {
     firebase.auth().signOut();
     this.$store.direct.commit.user.SET_USER(null);
+    window.location.reload(true);
   }
 
   get isAuthenticated(): boolean {

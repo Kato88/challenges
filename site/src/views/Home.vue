@@ -17,8 +17,21 @@
       <v-col cols="4">
         <v-card>
           <v-card-text>
-            This site is still in progress! Some loading animations do not work. 
-            If you validate a solution or submitting your solution it takes a couple of seconds.
+            Keep in mind that a correct result is the most important thing! Make sure this is your number one priority! Care less about the most efficient or cleanest solution.
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <v-card>
+          <v-card-text>
+            <b>Best of luck to everyone!</b> Don't forget to have fun and don't take it to serious! Solving those kind of challenges does not make you a good programmer, but a good problem solver. It takes other traits to become a truly fine programmer.
+          </v-card-text>
+        </v-card>
+      </v-col>
+      <v-col cols="4">
+        <v-card>
+          <v-card-text>
+            There will be extra points to earn! How? I don't tell :P
           </v-card-text>
         </v-card>
       </v-col>

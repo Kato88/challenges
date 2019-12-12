@@ -9,7 +9,7 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <v-data-table :loading="loading" :items="challenges" :headers="headers">
+        <v-data-table hide-default-footer :loading="loading" :items="challenges" :headers="headers">
           <template v-slot:item="{ item }">
             <v-hover v-slot:default="{ hover }">
               <tr @click="goTo(item)" class="pointer transition-swing">
@@ -49,7 +49,7 @@ export default class Challenges extends Vue {
       align: 'left',
       sortable: true,
       value: 'difficulty',
-      width: '100px',
+      width: '125px',
     },
     {
       text: 'Teaser',
