@@ -170,7 +170,7 @@ export const uploadSolution = functions
 
       const extraPoints = 1;
 
-      participation.points += extraPoints;
+      participation.points += participation.points * 0.25;
 
       // @ts-ignore
       const [_, leaderboardSnapshot] = await Promise.all([
@@ -196,7 +196,15 @@ export const uploadSolution = functions
 
 async function calculatePointsForChallenge(challengeId: string): Promise<number> {
   const challenge = await admin.firestore().collection('challenges').doc(challengeId).get();
-  return ((challenge.data() as Challenge).difficulty + 1) * 3;
+  const difficulty = (challenge.data() as Challenge).difficulty;
+
+  if (difficulty === 0) {
+    return 100;
+  } else if (difficulty === 1) {
+    return 400;
+  } else {
+    return 1000
+  }
 }
 
 async function retrieveParticipation(challengeId: string, userId: string): Promise<Participation | null> {

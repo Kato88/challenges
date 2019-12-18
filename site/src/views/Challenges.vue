@@ -9,7 +9,7 @@
         </v-btn>
       </v-card-title>
       <v-card-text>
-        <v-data-table hide-default-footer :loading="loading" :items="challenges" :headers="headers">
+        <v-data-table hide-default-footer :items-per-page="200" :loading="loading" :items="challenges" :headers="headers">
           <template v-slot:item="{ item }">
             <v-hover v-slot:default="{ hover }">
               <tr @click="goTo(item)" class="pointer transition-swing">

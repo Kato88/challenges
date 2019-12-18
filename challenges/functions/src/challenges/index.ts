@@ -7,6 +7,7 @@ import cubeTower from './cube-tower/index';
 import dancingCharacters from './dancing-characters/index';
 import bouncingBall from './bouncing-ball/index';
 import survivor from './survivor/index';
+import digitalRoot from './digital-root/index';
 
 export default {
     "full-words": fullWords,
@@ -18,4 +19,5 @@ export default {
     "dancing-characters": dancingCharacters,
     "bouncing-ball": bouncingBall,
     "survivor": survivor,
+    "digital-root": digitalRoot,
 } as any;
