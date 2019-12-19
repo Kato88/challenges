@@ -121,12 +121,20 @@ export const validateResult = functions
           const leaderboardEntry = leaderboardSnapshot.data() as LeaderboardEntry;
           leaderboardEntry.points += participation.points;
           await leaderboardSnapshot.ref.update({
-            points: leaderboardEntry.points
+            points: leaderboardEntry.points,
+            one: participation.points === 100 ? leaderboardEntry.one + 1 : leaderboardEntry.one,
+            two: participation.points === 400 ? leaderboardEntry.two + 1 : leaderboardEntry.two,
+            three: participation.points === 1000 ? leaderboardEntry.three + 1 : leaderboardEntry.three,
+            lastSolved: admin.firestore.Timestamp.fromDate(new Date()),
           });
         } else {
           await leaderboardSnapshot.ref.set({
             userName: participation.userName,
             points: participation.points,
+            one: participation.points === 100 ? 1 : 0,
+            two: participation.points === 400 ? 1 : 0,
+            three: participation.points === 1000 ? 1 : 0,
+            created: admin.firestore.Timestamp.fromDate(new Date()),
           } as LeaderboardEntry);
         }
 
@@ -168,15 +176,15 @@ export const uploadSolution = functions
         return;
       }
 
-      const extraPoints = 1;
+      const extraPoints = participation.points * 0.25;
 
-      participation.points += participation.points * 0.25;
+      participation.points += extraPoints;
 
       // @ts-ignore
       const [_, leaderboardSnapshot] = await Promise.all([
         admin.firestore().collection('participations').doc(data.participationId).update({
           solutionUrl: data.solutionUrl,
-          points: participation.points + 1,
+          points: participation.points,
         }),
         admin.firestore().collection('leaderboard').doc(participation.userId).get()
       ]);

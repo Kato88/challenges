@@ -84,7 +84,7 @@
             Congratulations you have mastered this challenge and earned
             <b>{{participation.points}}</b> points!
             You can earn
-            <b>one</b> additional points by sharing your solution! You can do this by uploading your code
+            <b>25%</b> additional points by sharing your solution! You can do this by uploading your code
             to
             <a
               href="https://pastebin.com/"

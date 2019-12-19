@@ -72,4 +72,9 @@ export interface LeaderboardEntry {
   id: string;
   points: number;
   userName: string;
+  one: number;
+  two: number;
+  three: number;
+  created: firebase.firestore.Timestamp;
+  lastSolved: firebase.firestore.Timestamp;
 }

@@ -54,9 +54,9 @@
             </p>
             You get a different amount of points based on the number of stars. Those stars also indicate how hard a challenge is.
             <ol>
-              <li>One star scores 100 points</li>
-              <li>Two stars scores 400 points</li>
-              <li>Three stars scores 1000 points</li>
+              <li><v-icon color="yellow">mdi-star</v-icon> scores 100 points</li>
+              <li><v-icon color="yellow">mdi-star</v-icon><v-icon color="yellow">mdi-star</v-icon> scores 400 points</li>
+              <li><v-icon color="yellow">mdi-star</v-icon><v-icon color="yellow">mdi-star</v-icon><v-icon color="yellow">mdi-star</v-icon> scores 1000 points</li>
             </ol>
             <br/>
             <p>
